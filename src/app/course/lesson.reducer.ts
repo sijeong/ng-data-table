@@ -1,21 +1,22 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Lesson } from '../model/lesson';
 import { LessonActions, LessonActionTypes } from './lesson.actions';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-export interface State extends EntityState<Lesson> {
+export interface LessonState extends EntityState<Lesson> {
   // additional entities state properties
 }
 
 export const adapter: EntityAdapter<Lesson> = createEntityAdapter<Lesson>();
 
-export const initialState: State = adapter.getInitialState({
+export const initialState: LessonState = adapter.getInitialState({
   // additional entity state properties
 });
 
 export function reducer(
   state = initialState,
   action: LessonActions
-): State {
+): LessonState {
   switch (action.type) {
     case LessonActionTypes.AddLesson: {
       return adapter.addOne(action.payload.lesson, state);
@@ -63,9 +64,12 @@ export function reducer(
   }
 }
 
+export const selectLessonState = createFeatureSelector<LessonState>('lesson');
 export const {
   selectIds,
   selectEntities,
   selectAll,
   selectTotal,
 } = adapter.getSelectors();
+
+export const selectAllLessions = createSelector(selectLessonState, selectAll);

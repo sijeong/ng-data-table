@@ -1,22 +1,31 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Course } from '../model/course';
 import { CourseActions, CourseActionTypes } from './course.actions';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-export interface State extends EntityState<Course> {
+export interface CourseState extends EntityState<Course> {
   // additional entities state properties
+  selectedCourse: Course;
 }
 
 export const adapter: EntityAdapter<Course> = createEntityAdapter<Course>();
 
-export const initialState: State = adapter.getInitialState({
+export const initialState: CourseState = adapter.getInitialState({
   // additional entity state properties
+  selectedCourse: null
 });
 
 export function reducer(
   state = initialState,
   action: CourseActions
-): State {
+): CourseState {
   switch (action.type) {
+    case CourseActionTypes.RequestCourses: {
+      return { ...state }
+    }
+    case CourseActionTypes.SelectCourse: {
+      return { ...state, selectedCourse: action.payload.course };
+    }
     case CourseActionTypes.AddCourse: {
       return adapter.addOne(action.payload.course, state);
     }
@@ -62,6 +71,7 @@ export function reducer(
     }
   }
 }
+export const selectCouseState = createFeatureSelector<CourseState>('course');
 
 export const {
   selectIds,
@@ -69,3 +79,5 @@ export const {
   selectAll,
   selectTotal,
 } = adapter.getSelectors();
+
+export const selectAllCourses = createSelector(selectCouseState, selectAll);

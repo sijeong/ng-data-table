@@ -7,6 +7,9 @@ import {debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/op
 import {merge} from "rxjs/observable/merge";
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {LessonsDataSource} from "../services/lessons.datasource";
+import { Store } from '@ngrx/store';
+import { AppState } from './reducers';
+import { store } from '@angular/core/src/render3';
 
 
 @Component({
@@ -29,7 +32,9 @@ export class CourseComponent implements OnInit, AfterViewInit {
     @ViewChild('input') input: ElementRef;
 
     constructor(private route: ActivatedRoute,
-                private coursesService: CoursesService) {
+                private coursesService: CoursesService,
+                private store: Store<AppState>
+                ) {
 
     }
 
@@ -37,7 +42,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
         this.course = this.route.snapshot.data["course"];
 
-        this.dataSource = new LessonsDataSource(this.coursesService);
+        this.dataSource = new LessonsDataSource(this.coursesService, this.store);
 
         this.dataSource.loadLessons(this.course.id, '', 'asc', 0, 3);
     }

@@ -8,6 +8,8 @@ import {CoursesService} from "./courses.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {catchError, finalize} from "rxjs/operators";
 import {of} from "rxjs/observable/of";
+import { Store } from "@ngrx/store";
+import { AppState } from "../course/reducers";
 
 
 
@@ -19,7 +21,7 @@ export class LessonsDataSource implements DataSource<Lesson> {
 
     public loading$ = this.loadingSubject.asObservable();
 
-    constructor(private coursesService: CoursesService) {
+    constructor(private coursesService: CoursesService, private store: Store<AppState>) {
 
     }
 

@@ -38,13 +38,13 @@ export class CoursesService {
     }
 
     findAllCourseLessons(courseId: number): Observable<Lesson[]> {
-        return this.http.get(this.serviceUrl + 'api/lessons', {
+        return this.http.get<Lesson[]>(this.serviceUrl + 'api/lessons', {
             params: new HttpParams()
                 .set('courseId', courseId.toString())
                 .set('pageNumber', "0")
                 .set('pageSize', "1000")
         }).pipe(
-            map(res => res["payload"]),
+            //map(res => res["payload"]),
             tap(d => console.log('findAllCourseLessions: ', d)),
             catchError(this.handleError)
         );
@@ -54,7 +54,7 @@ export class CoursesService {
         courseId: number, filter = '', sortOrder = 'asc',
         pageNumber = 0, pageSize = 3): Observable<Lesson[]> {
 
-        return this.http.get(this.serviceUrl + 'api/lessons', {
+        return this.http.get<Lesson[]>(this.serviceUrl + 'api/lessons', {
             params: new HttpParams()
                 .set('courseId', courseId.toString())
                 .set('filter', filter)
@@ -62,7 +62,7 @@ export class CoursesService {
                 .set('pageNumber', pageNumber.toString())
                 .set('pageSize', pageSize.toString())
         }).pipe(
-            map(res => res["payload"]),
+            // map(res => res["payload"]),
             tap(d => console.log('findLessons: ', d)),
             catchError(this.handleError)
         );

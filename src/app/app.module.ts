@@ -24,6 +24,20 @@ import { CourseResolver } from "./services/course.resolver";
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ApiService } from './api.service';
+
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+import { environment } from '../environments/environment';
+
+import { CourseEffects } from './course/course.effects';
+import { LessonEffects } from './course/lesson.effects';
+import { reducers, metaReducers } from './course/reducers';
+
+import * as fromCourse from './course/course.reducer';
+import * as fromLesson from './course/lesson.reducer';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -50,7 +64,18 @@ import { ApiService } from './api.service';
         MatSortModule,
         MatProgressSpinnerModule,
         AppRoutingModule,
-        HttpClientInMemoryWebApiModule.forRoot(ApiService, {passThruUnknownUrl: true})
+        HttpClientInMemoryWebApiModule.forRoot(ApiService, { passThruUnknownUrl: true }),
+        StoreModule.forRoot(reducers, { metaReducers }),
+
+        EffectsModule.forRoot([CourseEffects, LessonEffects]),
+        environment.production
+            ? []
+            : StoreDevtoolsModule.instrument({
+                name: 'Data Table Sample'
+            }),
+        StoreModule.forFeature('course', fromCourse.reducer),
+        StoreModule.forFeature('lesson', fromLesson.reducer),
+        
     ],
     providers: [
         CoursesService,
